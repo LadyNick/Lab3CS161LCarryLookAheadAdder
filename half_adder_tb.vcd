@@ -1,5 +1,5 @@
 $date
-	Tue Jan 24 11:21:16 2023
+	Sat Feb  4 02:07:04 2023
 $end
 $version
 	Icarus Verilog
@@ -34,9 +34,15 @@ $var wire 1 * result $end
 $upscope $end
 $upscope $end
 $upscope $end
+$scope module slow_or $end
+$var wire 2 . a [1:0] $end
+$var wire 1 / result $end
+$upscope $end
 $enddefinitions $end
 #0
 $dumpvars
+x/
+bz .
 bx -
 bx ,
 x+

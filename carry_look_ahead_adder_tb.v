@@ -29,29 +29,12 @@ module carry_look_ahead_adder_tb;
     reg [NUMBITS-1:0] expected_result;
     wire carryout;
     
+    reg[7:0] A_8;
+    reg[7:0] B_8;
+    wire [7:0] result_8;
+    reg [7:0] expected_result_8;
+    wire carryout_8;
 
-    // -------------------------------------------------------
-    // Setup output file for possible debugging uses
-    // -------------------------------------------------------
-    initial
-    begin
-        $dumpfile("lab03.vcd");
-        $dumpvars(0);
-    end
-
-    // -------------------------------------------------------
-    // Instantiate the Unit Under Test (UUT)
-    // -------------------------------------------------------
-    carry_look_ahead_adder #(.NUMBITS(NUMBITS)) uut (
-        .A(A), 
-        .B(B), 
-        .carryin(1'b0),
-        .result(result), 
-        .carryout(carryout)
-    );
-
-    //-----------------------------------------------------------
-    //Testing for more bits
     reg[15:0] A_16;
     reg[15:0] B_16;
     wire [15:0] result_16;
@@ -76,6 +59,33 @@ module carry_look_ahead_adder_tb;
     reg [127:0] expected_result_128;
     wire carryout_128;
 
+    // -------------------------------------------------------
+    // Setup output file for possible debugging uses
+    // -------------------------------------------------------
+    initial
+    begin
+        $dumpfile("lab03.vcd");
+        $dumpvars(0);
+    end
+
+    // -------------------------------------------------------
+    // Instantiate the Unit Under Test (UUT)
+    // -------------------------------------------------------
+    carry_look_ahead_adder #(.NUMBITS(NUMBITS)) uut (
+        .A(A), 
+        .B(B), 
+        .carryin(1'b0),
+        .result(result), 
+        .carryout(carryout)
+    );
+
+    //-----------------------------------------------------------
+    //Testing for more bits
+    carry_look_ahead_adder #(.NUMBITS(8)) BitAdder8( .A(A_8),
+                                            .B(B_8),
+                                            .carryin(1'b0),
+                                            .result(result_8),
+                                            .carryout(carryout_8));
     carry_look_ahead_adder #(.NUMBITS(16)) BitAdder16( .A(A_16),
                                             .B(B_16),
                                             .carryin(1'b0),
@@ -98,8 +108,6 @@ module carry_look_ahead_adder_tb;
                                             .carryout(carryout_128)); 
     //----------------------------------------------------------------
 
-
-  
     initial begin 
     
         clk = 0; reset = 1; #50; 
@@ -208,17 +216,92 @@ module carry_look_ahead_adder_tb;
         #10; // Wait 
 
         //TESTS FROM RIPPLE CARRY ADDER LAB 2
+        //8 BIT TESTS
+        $write("Test Group 2: Addition Behavior Verification 8BIT ... \n");
+
+        // Code necessary for each test case 
+        totalTests = totalTests + 1;
+        $write("\tTest Case 2.1: 0 + 0 = 0, c_out = 0 ... ");
+        A_8 = 8'h00;
+        B_8 = 8'h00;
+        expected_result_8 = 8'h00;
+
+        #100; // Wait 
+        if (expected_result_8 !== result_8 || carryout_8 !== 1'b0) begin
+            $write("failed\n");
+            $write(result);
+            failedTests = failedTests + 1;
+        end else begin
+            $write("passed\n");
+        end
+        #10; // Wait 
+        
+        // ----------------------------------------
+        // Add more test cases here 
+        // ----------------------------------------
+
+        totalTests = totalTests + 1;
+        //the result should be 0, with a carryout of 1
+        $write("\tTest Case 2.2: 255 + 1 = 256, c_out = 1 ... ");
+        A_8 = 8'hFF;
+        B_8 = 8'h01;
+        expected_result_8 = 8'h00;
+
+        #100; // Wait 
+        if (expected_result_8 !== result_8 || carryout_8 !== 1'b1) begin
+            $write("failed\n");
+            $write(result);
+            failedTests = failedTests + 1;
+        end else begin
+            $write("passed\n");
+        end
+        #10; // Wait 
+
+        totalTests = totalTests + 1;
+        $write("\tTest Case 2.3: 11 + 11 = 22, c_out = 0 ... ");
+        A_8 = 8'h0B;
+        B_8 = 8'h0B;
+        expected_result_8 = 8'h16;
+
+        #100; // Wait 
+        if (expected_result_8 !== result_8 || carryout_8 !== 1'b0) begin
+            $write("failed\n");
+            $write(result);
+            failedTests = failedTests + 1;
+        end else begin
+            $write("passed\n");
+        end
+        #10; // Wait 
+
+        totalTests = totalTests + 1;
+        $write("\tTest Case 2.4: 213 + 100 = 313, c_out = 1 ... ");
+        A_8 = 8'hD5;
+        B_8 = 8'h64;
+        expected_result_8 = 8'h39; //decimal 57
+        //The result should be the 8 bits before the carryout
+
+        #100; // Wait 
+        if (expected_result_8 !== result_8 || carryout_8 !== 1'b1) begin
+            $write("failed\n");
+            $write(result);
+            failedTests = failedTests + 1;
+        end else begin
+            $write("passed\n");
+        end
+        #10; // Wait 
+
+
         // ----------------------------------------
         // Tests group for Increasing Number of Bits 
         // ----------------------------------------
-        $write("Test Group 2: Increasing Number of Bits ...\n");
+        $write("Test Group 3: Increasing Number of Bits ...\n");
         
         // ----------------------------------------
         // Add test cases here 
         // ----------------------------------------
         totalTests = totalTests + 1;
         //the result should be 0, with a carryout of 1
-        $write("\tTest Case 2.1: 65535 + 1 = 65536, c_out = 1 ... ");
+        $write("\tTest Case 3.1: 65535 + 1 = 65536, c_out = 1 ... ");
         A_16 = 16'hFFFF;
         B_16 = 16'h01;
         expected_result_16 = 16'h00;
@@ -234,7 +317,7 @@ module carry_look_ahead_adder_tb;
 
         totalTests = totalTests + 1;
         //the result should be 0, with a carryout of 1
-        $write("\tTest Case 2.2: 4294967295 + 1 = 4294967296, c_out = 1 ... ");
+        $write("\tTest Case 3.2: 4294967295 + 1 = 4294967296, c_out = 1 ... ");
         A_32 = 32'hFFFFFFFF;
         B_32 = 32'h01;
         expected_result_32 = 32'h00;
@@ -250,7 +333,7 @@ module carry_look_ahead_adder_tb;
 
         totalTests = totalTests + 1;
         //the result should be 0, with a carryout of 1
-        $write("\tTest Case 2.3: 18446744073709551615 + 1 = 18446744073709551616, c_out = 1 ... ");
+        $write("\tTest Case 3.3: 18446744073709551615 + 1 = 18446744073709551616, c_out = 1 ... ");
         A_64 = 64'hFFFFFFFFFFFFFFFF;
         B_64 = 64'h01;
         expected_result_64 = 64'h00;
@@ -266,7 +349,7 @@ module carry_look_ahead_adder_tb;
 
         totalTests = totalTests + 1;
         //the result should be 0, with a carryout of 1
-        $write("\tTest Case 2.4: 340282366920938463463374607431768211455 + 1 = 340282366920938463463374607431768211456, c_out = 1 ... ");
+        $write("\tTest Case 3.4: 340282366920938463463374607431768211455 + 1 = 340282366920938463463374607431768211456, c_out = 1 ... ");
         A_128 = 128'hFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         B_128 = 128'h01;
         expected_result_128 = 128'h00;
