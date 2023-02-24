@@ -137,7 +137,7 @@ module carry_look_ahead_adder_tb;
 
         // Code necessary for each test case 
         totalTests = totalTests + 1;
-        $write("\tTest Case 1.1:   0+  0 =   0, c_out = 0 ... ");
+        $write("\tTest Case 1.1: 0 + 0 =   0, c_out = 0 ... ");
         A = 4'h0;
         B = 4'h0;
         expected_result = 4'h0;
@@ -145,6 +145,11 @@ module carry_look_ahead_adder_tb;
         #100; // Wait 
         if (expected_result !== result || carryout !== 1'b0) begin
             $write("failed\n");
+            $write("\tResult & Carryout");
+            $write(result);
+            $write("\t");
+            $write(carryout);
+            $write("\n");
             failedTests = failedTests + 1;
         end else begin
             $write("passed\n");
@@ -153,7 +158,7 @@ module carry_look_ahead_adder_tb;
         
         // Code necessary for each test case 
         totalTests = totalTests + 1;
-        $write("\tTest Case 1.2: 127+  1 = 128, c_out = 0 ... ");
+        $write("\tTest Case 1.2: 7 + 1 = 8, c_out = 0 ... ");
         A = 4'h7;
         B = 4'h1;
         expected_result = 4'h8;
@@ -161,6 +166,11 @@ module carry_look_ahead_adder_tb;
         #100; // Wait 
         if (expected_result !== result || carryout !== 1'b0) begin
             $write("failed\n");
+            $write("\tResult & Carryout");
+            $write(result);
+            $write("\t");
+            $write(carryout);
+            $write("\n");
             failedTests = failedTests + 1;
         end else begin
             $write("passed\n");
@@ -169,7 +179,7 @@ module carry_look_ahead_adder_tb;
 
         // Code necessary for each test case 
         totalTests = totalTests + 1;
-        $write("\tTest Case 1.3: 255+  1 =   0, c_out = 1 ... ");
+        $write("\tTest Case 1.3: 15 + 1 = 0 (16), c_out = 1 ... ");
         A = 4'hF;
         B = 4'h1;
         expected_result = 4'h0;
@@ -177,6 +187,11 @@ module carry_look_ahead_adder_tb;
         #100; // Wait 
         if (expected_result !== result || carryout !== 1'b1) begin
             $write("failed\n");
+            $write("\tResult & Carryout");
+            $write(result);
+            $write("\t");
+            $write(carryout);
+            $write("\n");
             failedTests = failedTests + 1;
         end else begin
             $write("passed\n");
@@ -185,7 +200,7 @@ module carry_look_ahead_adder_tb;
 
         // Code necessary for each test case 
         totalTests = totalTests + 1;
-        $write("\tTest Case 1.4: 123+ 46 = 169, c_out = 0 ... ");
+        $write("\tTest Case 1.4: 12 + 2 = 14, c_out = 0 ... ");
         A = 4'd12;
         B = 4'd2;
         expected_result = 4'd14;
@@ -193,6 +208,11 @@ module carry_look_ahead_adder_tb;
         #100; // Wait 
         if (expected_result !== result || carryout !== 1'b0) begin
             $write("failed\n");
+            $write("\tResult & Carryout");
+            $write(result);
+            $write("\t");
+            $write(carryout);
+            $write("\n");
             failedTests = failedTests + 1;
         end else begin
             $write("passed\n");
@@ -201,7 +221,7 @@ module carry_look_ahead_adder_tb;
 
         // Code necessary for each test case 
         totalTests = totalTests + 1;
-        $write("\tTest Case 1.5: 123+146 =  13, c_out = 1 ... ");
+        $write("\tTest Case 1.5: 12 + 6 = 2 (18), c_out = 1 ... ");
         A = 4'd12;
         B = 4'd6;
         expected_result = 4'd2;
@@ -209,12 +229,18 @@ module carry_look_ahead_adder_tb;
         #100; // Wait 
         if (expected_result !== result || carryout !== 1'b1) begin
             $write("failed\n");
+            $write("\tResult & Carryout");
+            $write(result);
+            $write("\t");
+            $write(carryout);
+            $write("\n");
             failedTests = failedTests + 1;
         end else begin
             $write("passed\n");
         end
         #10; // Wait 
 
+    
         //TESTS FROM RIPPLE CARRY ADDER LAB 2
         //8 BIT TESTS
         $write("Test Group 2: Addition Behavior Verification 8BIT ... \n");
@@ -239,7 +265,7 @@ module carry_look_ahead_adder_tb;
         // ----------------------------------------
         // Add more test cases here 
         // ----------------------------------------
-
+    
         totalTests = totalTests + 1;
         //the result should be 0, with a carryout of 1
         $write("\tTest Case 2.2: 255 + 1 = 256, c_out = 1 ... ");
@@ -362,7 +388,7 @@ module carry_look_ahead_adder_tb;
             $write("passed\n");
         end
         #10; // Wait 
-
+    
 
         // -------------------------------------------------------
         // End testing

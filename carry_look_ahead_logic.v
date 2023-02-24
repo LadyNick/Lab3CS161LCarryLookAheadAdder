@@ -28,28 +28,27 @@ module carry_look_ahead_logic # (parameter NUMBITS = 4) (
     // Insert your solution below
     // ------------------------------ 
 
-    wire [NUMBITS-1:0] c_w;
+    wire [NUMBITS:0] c_w;
     assign c_w[0] = c_in;
 
     always @(*)begin
         c <= c_w;
     end
 
-    wire [NUMBITS-1:0] prevmath;
-    assign prevmath[0] = c_in;
-
     genvar i,j;
     generate
-        for(i=1; i<NUMBITS; i=i+1)begin
+        for(i=1; i<NUMBITS+1; i=i+1)begin
             wire[i-1:0] stage_ors;
             for(j=0; j<i; j=j+1)begin
-                slow_and #() andsol(.a({p[i-1],prevmath[j]}),.result(stage_ors[j]));
+                if (j==0) begin
+                    slow_and #(.NUMINPUTS(i+1)) andc0(.a({p[i-1:0], c_in}), .result(stage_ors[j]));
+                end
+                else begin
+                    slow_and #(.NUMINPUTS(i-j+1)) andsol(.a({p[i-1:j],g[j-1]}),.result(stage_ors[j]));
+                end
             end
-            slow_or #(.NUMINPUTS(i+1)) csol(.a({g[i],stage_ors}), .result(c_w[i]));
-            assign prevmath = {g[i],stage_ors};
+            slow_or #(.NUMINPUTS(i+1)) csol(.a({g[i-1],stage_ors}), .result(c_w[i]));
         end
     endgenerate
-    
-
 
 endmodule

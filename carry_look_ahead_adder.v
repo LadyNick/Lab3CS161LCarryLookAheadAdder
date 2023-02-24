@@ -29,43 +29,42 @@ module carry_look_ahead_adder # ( parameter NUMBITS = 16 ) (
   // Insert your solution below
   // ------------------------------ 
 
-  output wire[NUMBITS-1:0] result_carrylookahead;
-  output wire[NUMBITS-1:0] carryout_carrylookahead;
-  output wire[NUMBITS-1:0] g_carrylookahead;
-  output wire[NUMBITS-1:0] p_carrylookahead;
-  output wire[NUMBITS:0] carryin_carrylookahead;
+  wire[NUMBITS-1:0] result_connect;
+  wire[NUMBITS-1:0] carryout_connect;
+  wire[NUMBITS-1:0] g_output;
+  wire[NUMBITS-1:0] p_output;
+  wire[NUMBITS:0] c_output;
 
-  //G is A AND B
-  //P is A XOR B
+  assign c_output[0] = carryin;
 
   always @(*) begin
-    result <= result_carrylookahead;
-    carryout <= carryout_carrylookahead[NUMBITS-1];
+    result <= result_connect;
+    carryout <= c_output[NUMBITS];
   end
 
   spg_block #() firstadder(  .a(A[0]),
                             .b(B[0]),
                             .c_in(carryin),
-                            .s(result_carrylookahead[0]),
-                            .g(g_carrylookahead[0]),
-                            .p(p_carrylookahead[0]));
+                            .s(result_connect[0]),
+                            .g(g_output[0]),
+                            .p(p_output[0]));
   
   genvar i;
   generate
     for(i=1; i<NUMBITS; i = i+1)begin
       spg_block #() firstadder(  .a(A[i]),
                             .b(B[i]),
-                            .c_in(carryout_carrylookahead[i-1]),
-                            .s(result_carrylookahead[i]),
-                            .g(g_carrylookahead[i]),
-                            .p(p_carrylookahead[i]));
+                            .c_in(c_output[i]),
+                            .s(result_connect[i]),
+                            .g(g_output[i]),
+                            .p(p_output[i]));
     end
-  endgenerate 
-
-  carry_look_ahead_logic #(.NUMBITS(NUMBITS)) carrylookwirelogic( .p(p_carrylookahead),
-                                                                  .g(g_carrylookahead),
+  endgenerate
+  
+  carry_look_ahead_logic #(.NUMBITS(NUMBITS)) carrylookwirelogic( .p(p_output),
+                                                                  .g(g_output),
                                                                   .c_in(carryin),
-                                                                  .c(carryin_carrylookahead));
+                                                                  .c(c_output));
 
 
 endmodule
